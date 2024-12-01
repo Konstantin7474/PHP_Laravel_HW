@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\EntityController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Employee;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,3 +38,11 @@ Route::get('/send_file', \App\Http\Controllers\SendFileController::class);
 
 Route::get('/form', [\App\Http\Controllers\FormProcessor::class, 'index']);
 Route::post('/form', [\App\Http\Controllers\FormProcessor::class, 'store']);
+
+
+Route::get('/test_database', function () {
+    $employee = new Employee();
+    $employee->first_name = 'Peter';
+    $employee->age = 21;
+    $employee->save();
+});
