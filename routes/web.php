@@ -46,3 +46,41 @@ Route::get('/test_database', function () {
     $employee->age = 21;
     $employee->save();
 });
+
+
+Route::get('/main', function () {
+    return view('mainpage');
+});
+
+Route::get('/about', function () {
+    return view('about');
+});
+
+Route::get('/users_list', function () {
+
+    $users = ['Ivan', 'Petr', 'Nikolai', 'Vasily', 'Oleg'];
+
+    return view('users_2', ['users' => $users]);
+});
+
+Route::get('/uppercase', function () {
+    return view('testdir');
+});
+
+Route::get('/', function () {
+    return view('home', [
+        'name' => 'Max',
+        'age' => 25,
+        'position' => 'developer',
+        'address' => 'Moscow',
+    ]);
+});
+
+Route::get('/contacts', function () {
+    return view('contacts', [
+        'address' => 'Moscow',
+        'post_code' => '000000',
+        'email' => 'email@mail.com',
+        'phone' => '89555555555',
+    ]);
+});
