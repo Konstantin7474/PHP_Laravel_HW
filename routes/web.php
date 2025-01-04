@@ -84,3 +84,26 @@ Route::get('/contacts', function () {
         'phone' => '89555555555',
     ]);
 });
+
+
+
+Route::get('/test_parameters', [\App\Http\Controllers\RequestTestController::class, 'testRequest']);
+
+Route::get('/test_header', [\App\Http\Controllers\TestHeaderController::class, 'getHeader']);
+
+Route::get('/test_cookie', [\App\Http\Controllers\TestCookieController::class, 'TestCookie']);
+
+Route::get('/upload_file', [\App\Http\Controllers\FileUploadController_2::class, 'showForm'])->name('showForm');
+
+Route::post('/upload_file', [\App\Http\Controllers\FileUploadController_2::class, 'fileUpload'])->name('uploadFile');
+
+
+Route::post('/json_parse', [\App\Http\Controllers\JsonParseController::class, 'parseJson']);
+
+
+
+Route::get('/worker_form', [\App\Http\Controllers\EmployeeController::class, 'index'])->name('index');
+
+Route::post('/worker_form', [\App\Http\Controllers\EmployeeController::class, 'store'])->name('store');
+
+Route::put('/worker_form/{id}', [\App\Http\Controllers\EmployeeController::class, 'update'])->name('update');
