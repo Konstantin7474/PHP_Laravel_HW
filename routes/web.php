@@ -107,3 +107,30 @@ Route::get('/worker_form', [\App\Http\Controllers\EmployeeController::class, 'in
 Route::post('/worker_form', [\App\Http\Controllers\EmployeeController::class, 'store'])->name('store');
 
 Route::put('/worker_form/{id}', [\App\Http\Controllers\EmployeeController::class, 'update'])->name('update');
+
+Route::get('/form', [\App\Http\Controllers\TestFormController::class, 'displayForm'])->name('show_form');
+
+Route::post('/form', [\App\Http\Controllers\TestFormController::class, 'postForm'])->name('post_form');
+
+
+Route::post('/employee_2', [\App\Http\Controllers\EmployeeController_2::class, 'store'])->name('store_employee');
+
+Route::get('/employee_2{id?}', [\App\Http\Controllers\EmployeeController_2::class, 'show'])->name('show_employee');
+
+
+
+
+Route::get('security_test', [\App\Http\Controllers\TestSecurityController::class, 'show'])->name('show_security_form');
+
+Route::post('security_test', [\App\Http\Controllers\TestSecurityController::class, 'post'])->name('show_security_form');
+
+
+Route::get('test_validation', [\App\Http\Controllers\TestValidationController::class, 'show'])->name('show_validation_form');
+
+Route::post('test_validation', [\App\Http\Controllers\TestValidationController::class, 'post'])->name('post_validation_form');
+
+
+
+Route::get('book_form', [\App\Http\Controllers\BookController::class, 'show'])->name('show_book_form');
+
+Route::post('book_form', [\App\Http\Controllers\BookController::class, 'store'])->name('post_book_form');
