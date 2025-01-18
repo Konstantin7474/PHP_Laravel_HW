@@ -3,7 +3,8 @@
 use App\Http\Controllers\EntityController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 Route::get('/', function () {
     return view('welcome');
@@ -134,3 +135,96 @@ Route::post('test_validation', [\App\Http\Controllers\TestValidationController::
 Route::get('book_form', [\App\Http\Controllers\BookController::class, 'show'])->name('show_book_form');
 
 Route::post('book_form', [\App\Http\Controllers\BookController::class, 'store'])->name('post_book_form');
+
+
+
+Route::get('test_url', function () {
+    /* return "Test"; */
+
+    /* $response = new Response('My content', 200);
+    return $response; */
+
+    /* return response('New test URL', 200)->header('X-HEADER-1', 'test')->header('Content-type', 'application/json'); */
+
+    return redirect('/');
+});
+
+
+Route::get('/test_cookie', function () {
+    return response('My first cookie')
+        /* ->cookie('my_test_cookie_', 'test content', 5) */
+        ->cookie('my_test_cookie_', 'test content', -1)
+        ->withHeaders([
+            'X-HEADER-TEST1' => 'IT WORKS!',
+            'X-HEADER-TEST2' => 'IT WORKS!',
+            'X-HEADER-TEST3' => 'IT WORKS!'
+        ])
+        ->withoutCookie('my_test_cookie2')
+
+        /* ->header('Set-Cookie', "my_test_cookie2=10")
+        ->header('X-HEADER-TEST1', 'IT WORKS!')
+        ->header('X-HEADER-TEST2', 'IT WORKS!')
+        ->header('X-HEADER-TEST3', 'IT WORKS!') */;
+});
+
+
+
+
+Route::get('/counter', function () {
+    $counterValue = session('counter', 0);
+    $counterValue++;
+    session(['counter' => $counterValue,]);
+    return 'ok';
+});
+
+Route::get('/result_counter', function () {
+    /* return session('counter', 0); */
+    if (session()->has('counter')) {
+        session()->forget('counter');
+    }
+
+
+    var_dump(session()->all());
+});
+
+Route::get('/list_of_books', function () {
+    $listOfBooks = session()->get('list_of_books', '');
+
+    return response()->json(['status' => 'received', 'list_of_books' => $listOfBooks ? unserialize($listOfBooks) : 'The list is empty']);
+});
+
+
+Route::post('/list_of_books', function (Request $request) {
+    $listOfBooks = session()->get('list_of_books', '');
+
+    $listOfBooks = $listOfBooks ? unserialize($listOfBooks) : [];
+    $listOfBooks[] = ['author' => $request->get('author'), 'title' => $request->get('title')];
+
+    session()->put('list_of_books', serialize($listOfBooks));
+
+    return response()->json(['status' => 'saved', 'list_of_books' => $listOfBooks]);
+});
+
+
+
+Route::get('/file_download', function () {
+    /* return response()->download(base_path() . '/test.txt', 'my_test'); */
+    return response()->streamDownload(function () {
+        echo file_get_contents('https://google.com');
+    }, 'google.html');
+});
+
+Route::get('/file_show', function () {
+    return response()->file(base_path() . '/test.txt');
+});
+
+
+
+
+Route::get('/user_2', [\App\Http\Controllers\User2Controller::class, 'index']);
+
+Route::get('/user_2/{id}', [\App\Http\Controllers\User2Controller::class, 'get']);
+
+Route::post('/store-user_2', [\App\Http\Controllers\User2Controller::class, 'store'])->name('store-user_2');
+
+Route::get('/resume', [\App\Http\Controllers\PdfGeneratorController::class, 'index']);
