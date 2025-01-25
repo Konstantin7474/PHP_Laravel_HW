@@ -228,3 +228,19 @@ Route::get('/user_2/{id}', [\App\Http\Controllers\User2Controller::class, 'get']
 Route::post('/store-user_2', [\App\Http\Controllers\User2Controller::class, 'store'])->name('store-user_2');
 
 Route::get('/resume', [\App\Http\Controllers\PdfGeneratorController::class, 'index']);
+
+
+
+Route::get('check_di', [\App\Http\Controllers\TestDiController::class, 'showUrl']);
+
+
+/* Route::get('/logs', function(){
+    return view('logs');
+}); */
+
+
+Route::middleware([\App\Http\Middleware\DataLogger::class])->group(function () {
+    Route::get('/logs', function () {
+        return view('logs');
+    });
+});
