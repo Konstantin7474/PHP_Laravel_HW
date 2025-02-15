@@ -1,14 +1,30 @@
 <?php
 
-use App\Http\Controllers\EntityController;
+
 use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
+use App\Models\News;
+use App\Models\News2;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+
+
+/* Route::get('/', function () {
+    return view('welcome');
+}); */
 
 Route::get('/', function () {
+    \App\Events\NewsCreated::dispatch(\App\Models\News::first());
     return view('welcome');
 });
+
+Route::get('/news-update-test', function () {
+//    News::withoutEvents(function () {
+    News::first()->update(['title' => 'New']);
+//    });
+    return 'updated';
+});
+
+
 
 /* Route::get('/test', \App\Http\Controllers\TestController::class); */
 
@@ -68,14 +84,14 @@ Route::get('/uppercase', function () {
     return view('testdir');
 });
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('home', [
         'name' => 'Max',
         'age' => 25,
         'position' => 'developer',
         'address' => 'Moscow',
     ]);
-});
+}); */
 
 Route::get('/contacts', function () {
     return view('contacts', [
@@ -244,3 +260,23 @@ Route::middleware([\App\Http\Middleware\DataLogger::class])->group(function () {
         return view('logs');
     });
 });
+
+
+
+Route::get('/news/create-test', function () {
+    $news2 = new News2();
+    $news2->title = 'Test news title';
+    $news2->body = 'Test news body';
+
+    $news2->save();
+    return $news2;
+    });
+
+
+    Route::get('/news/{id}/hide', function ($id) {
+        $news2 = News2::findOrFail($id);
+        $news2->hidden = true;
+        $news2->save();
+        \App\Events\NewsHidden::dispatch($news2);
+        return 'News hidden';
+    });
