@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Employee;
 use App\Models\News;
 use App\Models\News2;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
@@ -18,9 +19,9 @@ Route::get('/', function () {
 });
 
 Route::get('/news-update-test', function () {
-//    News::withoutEvents(function () {
+    //    News::withoutEvents(function () {
     News::first()->update(['title' => 'New']);
-//    });
+    //    });
     return 'updated';
 });
 
@@ -270,13 +271,40 @@ Route::get('/news/create-test', function () {
 
     $news2->save();
     return $news2;
-    });
+});
 
 
-    Route::get('/news/{id}/hide', function ($id) {
-        $news2 = News2::findOrFail($id);
-        $news2->hidden = true;
-        $news2->save();
-        \App\Events\NewsHidden::dispatch($news2);
-        return 'News hidden';
-    });
+Route::get('/news/{id}/hide', function ($id) {
+    $news2 = News2::findOrFail($id);
+    $news2->hidden = true;
+    $news2->save();
+    \App\Events\NewsHidden::dispatch($news2);
+    return 'News hidden';
+});
+
+
+Route::get('/sync-news', function () {
+    \App\Jobs\SyncNews::dispatch(15);
+    return response(['status' => 'success']);
+});
+
+Route::get('/locale', function () {
+    echo \Illuminate\Support\Facades\App::getLocale();
+});
+
+Route::get('/locale/set/{locale}', function ($locale) {
+    \Illuminate\Support\Facades\App::setLocale($locale);
+    echo \Illuminate\Support\Facades\App::getLocale();
+});
+
+Route::get('/user/create-test/{amount}', function ($amount) {
+    return \App\Models\User::factory($amount)->create();
+});
+
+Route::get('/user/{user}/change-email', function (User $user, Request $request) {
+    $oldEmail = $user->email;
+    $user->email = $request->input('email');
+    $user->save();
+    $user->notify(new \App\Notifications\UserEmailChangedNotification($oldEmail));
+    return response(['result' => 'email changed']);
+});
